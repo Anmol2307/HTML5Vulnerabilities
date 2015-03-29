@@ -1,0 +1,92 @@
+<html>
+<head>
+
+<script>
+
+var iNames = [
+	"name",
+	"city",
+	"state",
+	"country",
+	"email",
+	"company",
+];
+
+function start() {
+	var str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	var chars = str.split("");	
+
+	var form = document.getElementById('mine');
+	var d = document.getElementById('data');
+
+	if (document.getElementById('iname')) {
+		form.removeChild(document.getElementById('iname'));
+	}
+	
+	if (iNames.length > 0) {
+		var input = document.createElement('input');
+		input.type = "text";
+		input.name = iNames.shift();
+		input.id = "iname";
+		form.appendChild(input);
+	
+		d.innerHTML += "<br><b>Searching</b> \"" + input.name + "\": ";
+		mine(input, chars);
+	}
+		
+}
+
+function mine(input, charset) {
+	var d = document.getElementById('data');
+	var char = charset.shift();
+
+	var flag = 0;
+	
+	var event = document.createEvent('TextEvent');
+	event.initTextEvent('textInput', true, true, null, char);
+
+	input.value = "";
+	input.selectionStart = 0;
+	input.selectionEnd = 0;
+	input.focus();
+	input.dispatchEvent(event);	
+	
+	setTimeout(function() {
+		if (input.value.length > 1) {
+			d.innerHTML += input.value + "<br>\n";
+			flag++;
+		}
+		if ((charset.length > 0) && (! flag)) {
+			mine(input, charset);
+		} else {
+			start();
+		}
+	}, 500);
+}
+
+</script>
+
+<style>
+body {
+	font-size: 26px;
+}
+
+input {
+	font-size: 28px;
+	opacity: 1.0;
+}
+</style>
+
+</head>
+
+<body>
+
+<form id="mine">
+<input type="button" onclick="start();" value="Start">
+</form>
+                
+
+<div id="data"></div>
+
+</body>
+</html>
